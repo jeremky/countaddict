@@ -64,10 +64,16 @@ body {
   letter-spacing: -0.02em;
 }
 
-.today-date {
+.today-datetime {
   margin: 0.25rem 0 0;
   color: var(--text-muted);
   text-transform: capitalize;
+}
+
+.today-time::before {
+  content: "·";
+  margin: 0 0.4em;
+  opacity: 0.7;
 }
 
 .tabs {
@@ -234,6 +240,12 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.last-tap {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .history-table {

@@ -18,7 +18,10 @@
 <body>
 <header class="app-header">
   <h1>CountAddict</h1>
-  <p class="today-date" id="today-date"></p>
+  <p class="today-datetime">
+    <span id="today-date"></span>
+    <span class="today-time" id="today-time"></span>
+  </p>
 </header>
 
 <nav class="tabs" role="tablist">
@@ -37,6 +40,7 @@
           <span class="count" id="count-cigarettes">0</span>
         </button>
         <span class="counter-label">Cigarettes</span>
+        <span class="last-tap" id="last-cigarettes"></span>
       </div>
 
       <div class="counter-card counter-coffee">
@@ -46,6 +50,7 @@
           <span class="count" id="count-coffees">0</span>
         </button>
         <span class="counter-label">Cafés</span>
+        <span class="last-tap" id="last-coffees"></span>
       </div>
     </div>
   </section>

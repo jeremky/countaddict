@@ -1,4 +1,5 @@
 const STORAGE_KEY = "countaddict.history";
+const LAST_TAP_KEY = "countaddict.lastTap";
 const TYPES = ["cigarettes", "coffees"];
 
 function todayKey() {
@@ -34,6 +35,48 @@ function changeToday(type, delta) {
   return entry;
 }
 
+function getLastTaps() {
+  try {
+    return JSON.parse(localStorage.getItem(LAST_TAP_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function recordTap(type) {
+  const lastTaps = getLastTaps();
+  lastTaps[type] = Date.now();
+  localStorage.setItem(LAST_TAP_KEY, JSON.stringify(lastTaps));
+}
+
+function pluralize(count, singular, plural) {
+  return count === 1 ? singular : plural;
+}
+
+function formatElapsed(ms) {
+  const minutes = Math.floor(ms / 60000);
+  if (minutes < 1) return "à l'instant";
+  if (minutes < 60) return `il y a ${minutes} ${pluralize(minutes, "minute", "minutes")}`;
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (hours < 24) {
+    const hoursPart = `${hours} ${pluralize(hours, "heure", "heures")}`;
+    if (remainingMinutes === 0) return `il y a ${hoursPart}`;
+    return `il y a ${hoursPart} ${remainingMinutes} ${pluralize(remainingMinutes, "minute", "minutes")}`;
+  }
+  const days = Math.floor(hours / 24);
+  return `il y a ${days} ${pluralize(days, "jour", "jours")}`;
+}
+
+function renderLastTaps() {
+  const lastTaps = getLastTaps();
+  for (const type of TYPES) {
+    const el = document.getElementById(`last-${type}`);
+    const timestamp = lastTaps[type];
+    el.textContent = timestamp ? formatElapsed(Date.now() - timestamp) : "—";
+  }
+}
+
 function renderToday() {
   const entry = getTodayEntry();
   for (const type of TYPES) {
@@ -43,11 +86,15 @@ function renderToday() {
 }
 
 function renderDate() {
-  const el = document.getElementById("today-date");
-  el.textContent = new Date().toLocaleDateString("fr-FR", {
+  const now = new Date();
+  document.getElementById("today-date").textContent = now.toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
+  });
+  document.getElementById("today-time").textContent = now.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -87,7 +134,9 @@ function setupCounters() {
   document.querySelectorAll(".tap-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       changeToday(btn.dataset.type, 1);
+      recordTap(btn.dataset.type);
       renderToday();
+      renderLastTaps();
       bump(btn);
     });
   });
@@ -133,6 +182,11 @@ function registerServiceWorker() {
 
 renderDate();
 renderToday();
+renderLastTaps();
 setupCounters();
 setupTabs();
 registerServiceWorker();
+setInterval(() => {
+  renderDate();
+  renderLastTaps();
+}, 30000);
