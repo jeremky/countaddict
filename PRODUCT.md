@@ -29,7 +29,7 @@ Un compteur minimaliste zero-friction : un tap = un événement enregistré, san
 
 ## Capabilities and Constraints
 
-- Deux catégories fixes : cigarettes et cafés (`TYPES` dans `app.js`) — pas de catégories dynamiques/ajoutables aujourd'hui.
+- Aucune addiction n'est active par défaut : au premier lancement, la page d'accueil est vide et seul le lien « + Ajouter une addiction » est visible. Huit addictions basiques (cigarette, café, thé, alcool, sucrerie, énergisant, vapotage, soda) sont proposées en catalogue (`CATALOG` dans `app.js`), réordonnables par glissé-déposé. Une croix discrète sur chaque bulle propose d'Archiver (retire le widget de l'accueil, données conservées) ; les addictions archivées se gèrent depuis Réglages → Archives, avec un choix Réafficher (remet le widget) ou Supprimer (efface définitivement les données) — pas de catégories personnalisées libres.
 - Persistance exclusivement locale via `localStorage` (clé `countaddict.history`) — pas de compte, pas de sync, pas de backend, pas de sauvegarde serveur.
 - Stack zero-build, zero dépendance : HTML/CSS/JS vanilla, aucun framework, aucun bundler — contrainte durable à préserver pendant la refonte visuelle.
 - Interface en français uniquement — pas de scaffolding i18n à ajouter.

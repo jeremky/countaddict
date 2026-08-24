@@ -28,45 +28,76 @@
   <span class="tab-indicator" aria-hidden="true"></span>
   <button class="tab" id="tab-today" role="tab" aria-selected="true">Aujourd'hui</button>
   <button class="tab" id="tab-history" role="tab" aria-selected="false">Historique</button>
+  <button class="tab" id="tab-settings" role="tab" aria-selected="false">Réglages</button>
 </nav>
 
 <main>
   <section id="view-today" class="view">
-    <div class="counters">
-      <div class="counter-card counter-cigarette">
-        <button class="minus-btn" data-type="cigarettes" aria-label="Retirer une cigarette">−</button>
-        <button class="tap-btn" data-type="cigarettes" aria-label="Ajouter une cigarette">
-          <span class="emoji">🚬</span>
-          <span class="count" id="count-cigarettes">0</span>
-        </button>
-        <span class="counter-label">Cigarettes</span>
-        <span class="last-tap" id="last-cigarettes"></span>
-      </div>
+    <div class="counters" id="counters"></div>
 
-      <div class="counter-card counter-coffee">
-        <button class="minus-btn" data-type="coffees" aria-label="Retirer un café">−</button>
-        <button class="tap-btn" data-type="coffees" aria-label="Ajouter un café">
-          <span class="emoji">☕</span>
-          <span class="count" id="count-coffees">0</span>
-        </button>
-        <span class="counter-label">Cafés</span>
-        <span class="last-tap" id="last-coffees"></span>
-      </div>
-    </div>
+    <details class="add-addiction" id="add-addiction">
+      <summary>+ Ajouter une addiction</summary>
+      <div class="add-addiction-list" id="add-addiction-list"></div>
+    </details>
   </section>
 
   <section id="view-history" class="view hidden">
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>🚬</th>
-          <th>☕</th>
-        </tr>
-      </thead>
-      <tbody id="history-body"></tbody>
-    </table>
+    <div class="month-picker hidden" id="month-picker"></div>
+
+    <div class="table-scroll">
+      <table class="history-table" id="stats-table">
+        <thead>
+          <tr>
+            <th>Addiction</th>
+            <th>Moyenne</th>
+            <th>Total</th>
+            <th>Max</th>
+            <th>Pause max</th>
+          </tr>
+        </thead>
+        <tbody id="stats-body"></tbody>
+      </table>
+    </div>
+
+    <div class="table-scroll">
+      <table class="history-table" id="daily-table">
+        <thead>
+          <tr id="history-head"></tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
     <p class="empty-history hidden" id="empty-history">Pas encore d'historique.</p>
+  </section>
+
+  <section id="view-settings" class="view hidden">
+    <div class="settings-card">
+      <h2 class="settings-title">Mes données</h2>
+      <p class="settings-hint">Télécharge une copie de toutes tes données au format JSON.</p>
+      <button class="settings-btn settings-btn-primary" id="export-btn">Télécharger mes données</button>
+      <p class="settings-hint">Restaure des données depuis un fichier exporté précédemment.</p>
+      <button class="settings-btn settings-btn-primary" id="import-btn">Importer mes données</button>
+      <input type="file" accept="application/json,.json" id="import-file">
+    </div>
+
+    <div class="settings-card hidden" id="archive-card">
+      <h2 class="settings-title">Archives</h2>
+      <p class="settings-hint">Addictions retirées de l'accueil, données conservées.</p>
+      <div id="archive-list"></div>
+    </div>
+
+    <div class="settings-card">
+      <h2 class="settings-title">Réinitialisation</h2>
+      <p class="settings-hint">Efface définitivement l'historique et les compteurs du jour, puis recharge l'application.</p>
+      <button class="settings-btn settings-btn-danger" id="reset-btn">Réinitialiser toutes les données</button>
+    </div>
+
+    <div class="settings-card">
+      <h2 class="settings-title">À propos</h2>
+      <p class="about-name">CountAddict</p>
+      <p class="settings-hint">Un compteur minimaliste pour suivre tes habitudes, un tap à la fois.</p>
+      <p class="settings-hint">Toutes les données restent sur cet appareil — aucun compte, aucun cloud.</p>
+    </div>
   </section>
 </main>
 
