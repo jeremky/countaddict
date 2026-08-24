@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>CountAddict</title>
+<meta name="description" content="Compte tes cigarettes et cafés au fil de la journée.">
+<!-- Keep in sync with style.css --cigarette and manifest.json theme_color -->
+<meta name="theme-color" content="#FF6B5B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CountAddict">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="app-header">
+  <h1>CountAddict</h1>
+  <p class="today-date" id="today-date"></p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <span class="tab-indicator" aria-hidden="true"></span>
+  <button class="tab" id="tab-today" role="tab" aria-selected="true">Aujourd'hui</button>
+  <button class="tab" id="tab-history" role="tab" aria-selected="false">Historique</button>
+</nav>
+
+<main>
+  <section id="view-today" class="view">
+    <div class="counters">
+      <div class="counter-card counter-cigarette">
+        <button class="minus-btn" data-type="cigarettes" aria-label="Retirer une cigarette">−</button>
+        <button class="tap-btn" data-type="cigarettes" aria-label="Ajouter une cigarette">
+          <span class="emoji">🚬</span>
+          <span class="count" id="count-cigarettes">0</span>
+        </button>
+        <span class="counter-label">Cigarettes</span>
+      </div>
+
+      <div class="counter-card counter-coffee">
+        <button class="minus-btn" data-type="coffees" aria-label="Retirer un café">−</button>
+        <button class="tap-btn" data-type="coffees" aria-label="Ajouter un café">
+          <span class="emoji">☕</span>
+          <span class="count" id="count-coffees">0</span>
+        </button>
+        <span class="counter-label">Cafés</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-history" class="view hidden">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>🚬</th>
+          <th>☕</th>
+        </tr>
+      </thead>
+      <tbody id="history-body"></tbody>
+    </table>
+    <p class="empty-history hidden" id="empty-history">Pas encore d'historique.</p>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
