@@ -229,8 +229,7 @@ function changeToday(type, delta) {
   return entry;
 }
 
-function typeEverUsed(type) {
-  const history = getHistory();
+function typeEverUsed(type, history = getHistory()) {
   return Object.values(history).some((entry) => (entry[type] || 0) > 0);
 }
 
@@ -276,9 +275,8 @@ function recordTap(type) {
   saveLastTaps(lastTaps);
 }
 
-function getLongestGap(type) {
-  const lastTaps = getLastTaps();
-  const stored = getLongestGaps()[type] || 0;
+function getLongestGap(type, lastTaps = getLastTaps(), gaps = getLongestGaps()) {
+  const stored = gaps[type] || 0;
   const ongoing = lastTaps[type] ? Date.now() - lastTaps[type] : 0;
   return Math.max(stored, ongoing);
 }
@@ -362,9 +360,9 @@ function formatElapsed(ms) {
   return t("timeAgo")(formatDuration(ms));
 }
 
-function buildCounterCard(item) {
+function buildCounterCard(item, history) {
   const label = tc(item.key, "label");
-  const hasActivity = typeEverUsed(item.key);
+  const hasActivity = typeEverUsed(item.key, history);
 
   const card = document.createElement("div");
   card.className = `counter-card counter-${item.key}`;
@@ -391,10 +389,13 @@ function buildCounterCard(item) {
 function renderCounters() {
   const container = document.getElementById("counters");
   const types = getActiveTypes();
-  container.innerHTML = "";
+  const history = getHistory();
+  const fragment = document.createDocumentFragment();
   for (const type of types) {
-    container.appendChild(buildCounterCard(catalogItem(type)));
+    fragment.appendChild(buildCounterCard(catalogItem(type), history));
   }
+  container.innerHTML = "";
+  container.appendChild(fragment);
 }
 
 function renderToday() {
@@ -434,9 +435,9 @@ function historyTypes() {
 }
 
 function renderHistory() {
-  renderRangePicker();
-
   const history = getHistory();
+  renderRangePicker(history);
+
   const allDates = Object.keys(history);
   const dates = allDates.filter((date) => matchesRange(date, selectedRange)).sort((a, b) => b.localeCompare(a));
   const types = historyTypes();
@@ -458,21 +459,25 @@ function renderHistory() {
   statsTable.classList.remove("hidden");
   dailyTable.classList.remove("hidden");
 
-  const totals = computeTotals(selectedRange);
-  statsBody.innerHTML = "";
+  const totals = computeTotals(selectedRange, history);
+  const lastTaps = getLastTaps();
+  const gaps = getLongestGaps();
+  const statsFragment = document.createDocumentFragment();
   for (const type of types) {
     const item = catalogItem(type);
     const stat = totals.byType[type] || { total: 0, max: 0 };
     const avg = totals.days ? stat.total / totals.days : 0;
-    const longestGap = getLongestGap(type);
+    const longestGap = getLongestGap(type, lastTaps, gaps);
     const row = document.createElement("tr");
     row.innerHTML = `<td>${item.emoji} ${tc(type, "label")}</td><td>${avg.toFixed(1)}</td><td>${stat.total}</td><td>${stat.max}</td><td>${longestGap ? formatDuration(longestGap) : t("dashPlaceholder")}</td>`;
-    statsBody.appendChild(row);
+    statsFragment.appendChild(row);
   }
+  statsBody.innerHTML = "";
+  statsBody.appendChild(statsFragment);
 
   headRow.innerHTML = `<th>${t("historyDate")}</th>${types.map((type) => `<th>${catalogItem(type).emoji}</th>`).join("")}`;
-  body.innerHTML = "";
 
+  const bodyFragment = document.createDocumentFragment();
   for (const date of dates) {
     const entry = history[date];
     const row = document.createElement("tr");
@@ -482,12 +487,13 @@ function renderHistory() {
       month: "short",
     });
     row.innerHTML = `<td>${label}</td>${types.map((type) => `<td>${entry[type] || 0}</td>`).join("")}`;
-    body.appendChild(row);
+    bodyFragment.appendChild(row);
   }
+  body.innerHTML = "";
+  body.appendChild(bodyFragment);
 }
 
-function computeTotals(range) {
-  const history = getHistory();
+function computeTotals(range, history = getHistory()) {
   const byType = {};
   let days = 0;
   for (const [date, entry] of Object.entries(history)) {
@@ -537,16 +543,17 @@ const HISTORY_RANGES = [
 const DEFAULT_RANGE = "week";
 let selectedRange = DEFAULT_RANGE;
 
-function renderRangePicker() {
+function renderRangePicker(history = getHistory()) {
   const picker = document.getElementById("month-picker");
-  picker.innerHTML = "";
 
-  if (Object.keys(getHistory()).length === 0) {
+  if (Object.keys(history).length === 0) {
+    picker.innerHTML = "";
     picker.classList.add("hidden");
     return;
   }
   picker.classList.remove("hidden");
 
+  const fragment = document.createDocumentFragment();
   for (const option of HISTORY_RANGES) {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -554,8 +561,10 @@ function renderRangePicker() {
     btn.classList.toggle("active", option.value === selectedRange);
     btn.dataset.range = option.value;
     btn.textContent = t(option.key);
-    picker.appendChild(btn);
+    fragment.appendChild(btn);
   }
+  picker.innerHTML = "";
+  picker.appendChild(fragment);
 }
 
 function renderAddMenu() {
@@ -571,14 +580,16 @@ function renderAddMenu() {
     return;
   }
 
+  const fragment = document.createDocumentFragment();
   for (const item of available) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "add-addiction-row";
     btn.dataset.type = item.key;
     btn.innerHTML = `<span>${item.emoji}</span><span>${tc(item.key, "label")}</span>`;
-    list.appendChild(btn);
+    fragment.appendChild(btn);
   }
+  list.appendChild(fragment);
 }
 
 function renderArchive() {
@@ -596,6 +607,7 @@ function renderArchive() {
   card.classList.remove("hidden");
 
   const locale = LOCALES[getLang()];
+  const fragment = document.createDocumentFragment();
   for (const type of archived) {
     const item = catalogItem(type);
     const dateLabel = new Date(`${archiveDates[type]}T00:00:00`).toLocaleDateString(locale, {
@@ -615,8 +627,9 @@ function renderArchive() {
         <button class="archive-delete-btn" data-type="${item.key}">${t("archiveDelete")}</button>
       </div>
     `;
-    list.appendChild(row);
+    fragment.appendChild(row);
   }
+  list.appendChild(fragment);
 }
 
 function setupArchive() {
@@ -1035,7 +1048,19 @@ setupArchive();
 setupLanguage();
 setupReset();
 registerServiceWorker();
-setInterval(() => {
+
+function tick() {
   renderDate();
   renderLastTaps();
-}, 30000);
+}
+
+let tickInterval = setInterval(tick, 30000);
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    clearInterval(tickInterval);
+  } else {
+    tick();
+    tickInterval = setInterval(tick, 30000);
+  }
+});
