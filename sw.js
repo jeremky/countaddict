@@ -1,4 +1,8 @@
-const CACHE_NAME = "countaddict-cache";
+// Incrémenter CACHE_VERSION à chaque déploiement qui change le contenu des
+// ASSETS ci-dessous : ça force le nettoyage du cache précédent via "activate"
+// au lieu de dépendre uniquement de la revalidation en arrière-plan.
+const CACHE_VERSION = "v2";
+const CACHE_NAME = `countaddict-cache-${CACHE_VERSION}`;
 const ASSETS = [
   "./",
   "index.html",

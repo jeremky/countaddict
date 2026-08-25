@@ -40,6 +40,7 @@ const TRANSLATIONS = {
     statsAvg: "Moyenne",
     statsTotal: "Total",
     statsMax: "Max",
+    statsTrend: "Tendance",
     statsBestGap: "Pause max",
     emptyHistory: "Pas encore d'historique.",
     rangeThisWeek: "Cette semaine",
@@ -111,6 +112,7 @@ const TRANSLATIONS = {
     statsAvg: "Average",
     statsTotal: "Total",
     statsMax: "Max",
+    statsTrend: "Trend",
     statsBestGap: "Longest gap",
     emptyHistory: "No history yet.",
     rangeThisWeek: "This week",
@@ -434,12 +436,25 @@ function historyTypes() {
   return CATALOG.map((item) => item.key).filter((key) => active.has(key));
 }
 
+function buildSparkline(values) {
+  if (values.length < 2) return t("dashPlaceholder");
+  const width = 60;
+  const height = 20;
+  const max = Math.max(...values, 1);
+  const step = width / (values.length - 1);
+  const points = values
+    .map((v, i) => `${(i * step).toFixed(1)},${(height - (v / max) * height).toFixed(1)}`)
+    .join(" ");
+  return `<svg class="sparkline" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${points}" /></svg>`;
+}
+
 function renderHistory() {
   const history = getHistory();
   renderRangePicker(history);
 
   const allDates = Object.keys(history);
   const dates = allDates.filter((date) => matchesRange(date, selectedRange)).sort((a, b) => b.localeCompare(a));
+  const trendDates = [...dates].sort((a, b) => a.localeCompare(b));
   const types = historyTypes();
   const headRow = document.getElementById("history-head");
   const body = document.getElementById("history-body");
@@ -468,8 +483,9 @@ function renderHistory() {
     const stat = totals.byType[type] || { total: 0, max: 0 };
     const avg = totals.days ? stat.total / totals.days : 0;
     const longestGap = getLongestGap(type, lastTaps, gaps);
+    const trend = buildSparkline(trendDates.map((date) => history[date][type] || 0));
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.emoji} ${tc(type, "label")}</td><td>${avg.toFixed(1)}</td><td>${stat.total}</td><td>${stat.max}</td><td>${longestGap ? formatDuration(longestGap) : t("dashPlaceholder")}</td>`;
+    row.innerHTML = `<td>${item.emoji} ${tc(type, "label")}</td><td>${avg.toFixed(1)}</td><td>${stat.total}</td><td>${stat.max}</td><td>${trend}</td><td>${longestGap ? formatDuration(longestGap) : t("dashPlaceholder")}</td>`;
     statsFragment.appendChild(row);
   }
   statsBody.innerHTML = "";

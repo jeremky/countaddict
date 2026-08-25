@@ -568,6 +568,7 @@ main {
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  container-type: inline-size;
 }
 
 .history-table {
@@ -600,13 +601,41 @@ main {
   border-bottom: none;
 }
 
-/* écrans étroits : la colonne "Pause max" est la moins essentielle, on la retire pour éviter le scroll horizontal */
-@media (max-width: 479px) {
+.sparkline {
+  width: 44px;
+  height: 16px;
+  display: block;
+  margin-left: auto;
+  overflow: visible;
+}
+
+.sparkline polyline {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* colonnes secondaires du tableau de stats : se masquent progressivement selon
+   la place réellement disponible dans le tableau, avant de recourir au scroll
+   horizontal. Tendance (décorative) part en premier, puis Pause max. */
+@container (max-width: 600px) {
+  #stats-table th:nth-child(5),
+  #stats-table td:nth-child(5) {
+    display: none;
+  }
+}
+
+@container (max-width: 420px) {
   #stats-table th:last-child,
   #stats-table td:last-child {
     display: none;
   }
+}
 
+@container (max-width: 479px) {
   .history-table th,
   .history-table td {
     padding: 0.65rem 0.6rem;
