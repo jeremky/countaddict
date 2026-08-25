@@ -22,6 +22,9 @@ const CATALOG = [
 
 const LOCALES = { fr: "fr-FR", en: "en-US" };
 
+const APP_VERSION = "1.0.0";
+const PROJECT_URL = "https://github.com/jeremky/countaddict";
+
 const TRANSLATIONS = {
   fr: {
     tabToday: "Aujourd'hui",
@@ -66,6 +69,9 @@ const TRANSLATIONS = {
     aboutTitle: "À propos",
     aboutTagline: "Un compteur minimaliste pour suivre tes habitudes, un tap à la fois.",
     aboutPrivacy: "Toutes les données restent sur cet appareil — aucun compte, aucun cloud.",
+    aboutVersion: (v) => `Version ${v}`,
+    aboutLink: "Voir le projet sur GitHub",
+    clearCacheBtn: "Vider le cache",
     confirmDeleteType: (label) => `Supprimer définitivement les données de ${label} ? Cette action est irréversible.`,
     confirmImport: "Importer ces données ? Elles remplaceront les données actuelles.",
     invalidImport: "Ce fichier n'est pas un export CountAddict valide.",
@@ -138,6 +144,9 @@ const TRANSLATIONS = {
     aboutTitle: "About",
     aboutTagline: "A minimalist counter to track your habits, one tap at a time.",
     aboutPrivacy: "All data stays on this device — no account, no cloud.",
+    aboutVersion: (v) => `Version ${v}`,
+    aboutLink: "View project on GitHub",
+    clearCacheBtn: "Clear cache",
     confirmDeleteType: (label) => `Permanently delete data for ${label}? This action is irreversible.`,
     confirmImport: "Import this data? It will replace your current data.",
     invalidImport: "This file is not a valid CountAddict export.",
@@ -650,6 +659,11 @@ function renderArchive() {
   list.appendChild(fragment);
 }
 
+function renderAboutMeta() {
+  const el = document.getElementById("about-meta");
+  el.innerHTML = `${t("aboutVersion")(APP_VERSION)} · <a class="settings-link" href="${PROJECT_URL}" target="_blank" rel="noopener noreferrer">${t("aboutLink")}</a>`;
+}
+
 function setupArchive() {
   document.getElementById("archive-list").addEventListener("click", (e) => {
     const restoreBtn = e.target.closest(".archive-restore-btn");
@@ -1014,6 +1028,7 @@ function setupLanguage() {
       renderAddMenu();
       renderArchive();
       renderHistory();
+      renderAboutMeta();
     });
   });
 
@@ -1045,6 +1060,14 @@ function setupReset() {
   });
 }
 
+function setupClearCache() {
+  document.getElementById("clear-cache-btn").addEventListener("click", async (e) => {
+    e.target.disabled = true;
+    await clearAppCache();
+    location.reload();
+  });
+}
+
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
@@ -1057,6 +1080,7 @@ renderCounters();
 renderToday();
 renderLastTaps();
 renderAddMenu();
+renderAboutMeta();
 setupCounters();
 setupReorder();
 setupTabs();
@@ -1067,6 +1091,7 @@ setupImport();
 setupArchive();
 setupLanguage();
 setupReset();
+setupClearCache();
 registerServiceWorker();
 
 function tick() {

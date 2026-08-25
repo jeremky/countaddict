@@ -852,6 +852,30 @@ body.dragging-active {
   color: #fff;
 }
 
+.settings-btn-secondary {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-btn-secondary:active {
+  background: var(--bg);
+  border-color: var(--text-muted);
+}
+
+.settings-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.settings-link {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 #import-file {
   display: none;
 }
