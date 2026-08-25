@@ -899,6 +899,7 @@ function setupReorder() {
     dragCard.style.width = `${rect.width}px`;
     dragCard.style.left = `${rect.left}px`;
     dragCard.style.top = `${rect.top}px`;
+    document.body.classList.add("dragging-active");
 
     e.preventDefault();
   });
@@ -931,6 +932,7 @@ function setupReorder() {
     dragCard.style.width = "";
     dragCard.style.left = "";
     dragCard.style.top = "";
+    document.body.classList.remove("dragging-active");
 
     setActiveTypes([...counters.querySelectorAll(".counter-card")].map((card) => card.dataset.type));
 

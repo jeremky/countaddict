@@ -473,7 +473,18 @@ main {
   cursor: grab;
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition: opacity 0.15s ease;
+}
+
+/* Pendant un glissé-déposé, on coupe la sélection de texte sur toute la page :
+   sur mobile, le geste de drag peut sinon déclencher la sélection native
+   (surbrillance bleue + loupe) sur les cartes que le doigt survole. */
+body.dragging-active {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .drag-handle:hover,
