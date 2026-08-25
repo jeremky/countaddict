@@ -16,6 +16,8 @@
   --alcohol-dark: #A87D28;
   --sugar: #C96A94;
   --sugar-dark: #A84E76;
+  --chocolate: #7A4B32;
+  --chocolate-dark: #5C3722;
   --energy: #3E8C74;
   --energy-dark: #2E6E5A;
   --vaping: #6E7DA8;
@@ -300,6 +302,11 @@ main {
 .counter-sugar .tap-btn {
   background: radial-gradient(circle at 30% 30%, var(--sugar), var(--sugar-dark));
   --tap-shadow: color-mix(in srgb, var(--sugar) 55%, transparent);
+}
+
+.counter-chocolate .tap-btn {
+  background: radial-gradient(circle at 30% 30%, var(--chocolate), var(--chocolate-dark));
+  --tap-shadow: color-mix(in srgb, var(--chocolate) 55%, transparent);
 }
 
 .counter-energy .tap-btn {
@@ -667,6 +674,7 @@ body.dragging-active {
 .history-card-tea { --trend-color: var(--tea-dark); }
 .history-card-alcohol { --trend-color: var(--alcohol-dark); }
 .history-card-sugar { --trend-color: var(--sugar-dark); }
+.history-card-chocolate { --trend-color: var(--chocolate-dark); }
 .history-card-energy { --trend-color: var(--energy-dark); }
 .history-card-vaping { --trend-color: var(--vaping-dark); }
 .history-card-soda { --trend-color: var(--soda-dark); }

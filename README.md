@@ -1,6 +1,6 @@
 # CountAddict
 
-Webapp minimaliste pour compter en un tap tes habitudes du quotidien (cigarette, café, thé, alcool, sucrerie, énergisant, vapotage, soda, achat, voyage, grignotage, CBD...), avec un historique des jours précédents.
+Webapp minimaliste pour compter en un tap tes habitudes du quotidien (cigarette, café, thé, alcool, sucrerie, chocolat, énergisant, vapotage, soda, achat, voyage, grignotage, CBD...), avec un historique des jours précédents.
 
 ## Stack
 
