@@ -30,6 +30,7 @@ L'app est installable sur mobile ("Ajouter à l'écran d'accueil") et fonctionne
 - Historique quotidien avec statistiques (moyenne, total, max, tendance en mini-graphique, pause la plus longue par addiction), filtrable par période (Cette semaine, Ce mois-ci, 6 mois, 1 an, Tout).
 - Archivage réversible : retire une addiction de l'accueil sans perdre ses données (elle disparaît aussi de l'historique tant qu'elle reste archivée), avec la date d'archivage visible dans Réglages → Archives.
 - Export/import des données au format JSON depuis les réglages.
+- Réglages → À propos : numéro de version, lien vers le dépôt du projet et bouton pour vider le cache hors-ligne (sans toucher aux données, voir [Données](#données)).
 
 ## Langue
 
@@ -43,4 +44,4 @@ Stockées en clair dans `localStorage` sous la clé `countaddict.history`, au fo
 { "2026-08-24": { "cigarette": 3, "coffee": 2 } }
 ```
 
-Vider le cache du navigateur ou les données du site efface l'historique — pas de sauvegarde côté serveur.
+Vider le cache du navigateur ou les données du site efface l'historique — pas de sauvegarde côté serveur. Le bouton « Vider le cache » de Réglages → À propos ne vide que le cache hors-ligne (Cache Storage + service worker) : il ne touche pas à `localStorage`, donc l'historique est conservé.
