@@ -433,7 +433,9 @@ function renderDate() {
 
 function historyTypes() {
   const active = new Set(getActiveTypes());
-  return CATALOG.map((item) => item.key).filter((key) => active.has(key));
+  return CATALOG.map((item) => item.key)
+    .filter((key) => active.has(key))
+    .sort((a, b) => tc(a, "label").localeCompare(tc(b, "label"), LOCALES[getLang()]));
 }
 
 function buildSparkline(values) {
