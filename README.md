@@ -8,8 +8,10 @@ HTML/CSS/JS vanilla, aucune dépendance, aucun build. Les données sont stockée
 
 ## Lancer en local
 
+Depuis le dossier du projet :
+
 ```sh
-python3 -m http.server -d /Users/jeremky/Documents/Applications/sources/countaddict
+python3 -m http.server 8000
 ```
 
 Puis ouvrir [http://localhost:8000](http://localhost:8000).
@@ -25,7 +27,7 @@ L'app est installable sur mobile ("Ajouter à l'écran d'accueil") et fonctionne
 ## Fonctionnalités
 
 - Compteurs personnalisables : ajoute/retire des addictions depuis le catalogue, réordonne-les par glissé-déposé.
-- Historique quotidien avec statistiques (moyenne, total, max, pause la plus longue par addiction), filtrable par période (Cette semaine, Ce mois-ci, 6 mois, 1 an, Tout).
+- Historique quotidien avec statistiques (moyenne, total, max, tendance en mini-graphique, pause la plus longue par addiction), filtrable par période (Cette semaine, Ce mois-ci, 6 mois, 1 an, Tout).
 - Archivage réversible : retire une addiction de l'accueil sans perdre ses données (elle disparaît aussi de l'historique tant qu'elle reste archivée), avec la date d'archivage visible dans Réglages → Archives.
 - Export/import des données au format JSON depuis les réglages.
 
