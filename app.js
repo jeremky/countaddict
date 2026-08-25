@@ -38,8 +38,6 @@ const TRANSLATIONS = {
     optionsFor: (label) => `Options pour ${label}`,
     archiveAria: (label) => `Archiver ${label} (données conservées)`,
     deleteAria: (label) => `Supprimer ${label} (irréversible)`,
-    historyDate: "Date",
-    statsAddiction: "Addiction",
     statsAvg: "Moyenne",
     statsTotal: "Total",
     statsMax: "Max",
@@ -113,8 +111,6 @@ const TRANSLATIONS = {
     optionsFor: (label) => `Options for ${label}`,
     archiveAria: (label) => `Archive ${label} (data kept)`,
     deleteAria: (label) => `Delete ${label} (irreversible)`,
-    historyDate: "Date",
-    statsAddiction: "Addiction",
     statsAvg: "Average",
     statsTotal: "Total",
     statsMax: "Max",
@@ -464,60 +460,52 @@ function renderHistory() {
   renderRangePicker(history);
 
   const allDates = Object.keys(history);
-  const dates = allDates.filter((date) => matchesRange(date, selectedRange)).sort((a, b) => b.localeCompare(a));
-  const trendDates = [...dates].sort((a, b) => a.localeCompare(b));
+  const dates = allDates.filter((date) => matchesRange(date, selectedRange));
+  const trendDates = dates.sort((a, b) => a.localeCompare(b));
   const types = historyTypes();
-  const headRow = document.getElementById("history-head");
-  const body = document.getElementById("history-body");
-  const statsBody = document.getElementById("stats-body");
-  const statsTable = document.getElementById("stats-table");
-  const dailyTable = document.getElementById("daily-table");
+  const cards = document.getElementById("stats-cards");
   const empty = document.getElementById("empty-history");
-  const locale = LOCALES[getLang()];
 
   if (allDates.length === 0) {
     empty.classList.remove("hidden");
-    statsTable.classList.add("hidden");
-    dailyTable.classList.add("hidden");
+    cards.classList.add("hidden");
     return;
   }
   empty.classList.add("hidden");
-  statsTable.classList.remove("hidden");
-  dailyTable.classList.remove("hidden");
+  cards.classList.remove("hidden");
 
   const totals = computeTotals(selectedRange, history);
   const lastTaps = getLastTaps();
   const gaps = getLongestGaps();
-  const statsFragment = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment();
   for (const type of types) {
     const item = catalogItem(type);
     const stat = totals.byType[type] || { total: 0, max: 0 };
     const avg = totals.days ? stat.total / totals.days : 0;
     const longestGap = getLongestGap(type, lastTaps, gaps);
     const trend = buildSparkline(trendDates.map((date) => history[date][type] || 0));
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.emoji} ${tc(type, "label")}</td><td>${avg.toFixed(1)}</td><td>${stat.total}</td><td>${stat.max}</td><td>${trend}</td><td>${longestGap ? formatDuration(longestGap) : t("dashPlaceholder")}</td>`;
-    statsFragment.appendChild(row);
+    const card = document.createElement("div");
+    card.className = `history-card history-card-${type}`;
+    card.innerHTML = `
+      <div class="history-card-header">
+        <span class="history-card-emoji">${item.emoji}</span>
+        <span class="history-card-label">${tc(type, "label")}</span>
+      </div>
+      <div class="history-stats">
+        <div class="history-stat"><span class="history-stat-value">${avg.toFixed(1)}</span><span class="history-stat-label">${t("statsAvg")}</span></div>
+        <div class="history-stat"><span class="history-stat-value">${stat.total}</span><span class="history-stat-label">${t("statsTotal")}</span></div>
+        <div class="history-stat"><span class="history-stat-value">${stat.max}</span><span class="history-stat-label">${t("statsMax")}</span></div>
+        <div class="history-stat"><span class="history-stat-value">${longestGap ? formatDuration(longestGap) : t("dashPlaceholder")}</span><span class="history-stat-label">${t("statsBestGap")}</span></div>
+      </div>
+      <div class="history-trend">
+        <span class="history-trend-label">${t("statsTrend")}</span>
+        ${trend}
+      </div>
+    `;
+    fragment.appendChild(card);
   }
-  statsBody.innerHTML = "";
-  statsBody.appendChild(statsFragment);
-
-  headRow.innerHTML = `<th>${t("historyDate")}</th>${types.map((type) => `<th>${catalogItem(type).emoji}</th>`).join("")}`;
-
-  const bodyFragment = document.createDocumentFragment();
-  for (const date of dates) {
-    const entry = history[date];
-    const row = document.createElement("tr");
-    const label = new Date(`${date}T00:00:00`).toLocaleDateString(locale, {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-    });
-    row.innerHTML = `<td>${label}</td>${types.map((type) => `<td>${entry[type] || 0}</td>`).join("")}`;
-    bodyFragment.appendChild(row);
-  }
-  body.innerHTML = "";
-  body.appendChild(bodyFragment);
+  cards.innerHTML = "";
+  cards.appendChild(fragment);
 }
 
 function computeTotals(range, history = getHistory()) {
