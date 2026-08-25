@@ -560,7 +560,9 @@ function renderRangePicker() {
 
 function renderAddMenu() {
   const active = new Set(getActiveTypes());
-  const available = CATALOG.filter((item) => !active.has(item.key));
+  const available = CATALOG.filter((item) => !active.has(item.key)).sort((a, b) =>
+    tc(a.key, "label").localeCompare(tc(b.key, "label"), LOCALES[getLang()])
+  );
   const list = document.getElementById("add-addiction-list");
   list.innerHTML = "";
 

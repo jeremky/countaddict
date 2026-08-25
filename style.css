@@ -431,7 +431,7 @@ main {
 
 .delete-btn {
   border: 1px solid var(--cigarette-dark);
-  background: transparent;
+  background: var(--surface);
   color: var(--cigarette-dark);
 }
 
