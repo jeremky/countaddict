@@ -26,9 +26,9 @@
 
 <nav class="tabs" role="tablist">
   <span class="tab-indicator" aria-hidden="true"></span>
-  <button class="tab" id="tab-today" role="tab" aria-selected="true">Aujourd'hui</button>
-  <button class="tab" id="tab-history" role="tab" aria-selected="false">Historique</button>
-  <button class="tab" id="tab-settings" role="tab" aria-selected="false">Réglages</button>
+  <button class="tab" id="tab-today" role="tab" aria-selected="true" data-i18n="tabToday">Aujourd'hui</button>
+  <button class="tab" id="tab-history" role="tab" aria-selected="false" data-i18n="tabHistory">Historique</button>
+  <button class="tab" id="tab-settings" role="tab" aria-selected="false" data-i18n="tabSettings">Réglages</button>
 </nav>
 
 <main>
@@ -36,7 +36,7 @@
     <div class="counters" id="counters"></div>
 
     <details class="add-addiction" id="add-addiction">
-      <summary>+ Ajouter une addiction</summary>
+      <summary data-i18n="addAddiction">+ Ajouter une addiction</summary>
       <div class="add-addiction-list" id="add-addiction-list"></div>
     </details>
   </section>
@@ -48,11 +48,11 @@
       <table class="history-table" id="stats-table">
         <thead>
           <tr>
-            <th>Addiction</th>
-            <th>Moyenne</th>
-            <th>Total</th>
-            <th>Max</th>
-            <th>Pause max</th>
+            <th data-i18n="statsAddiction">Addiction</th>
+            <th data-i18n="statsAvg">Moyenne</th>
+            <th data-i18n="statsTotal">Total</th>
+            <th data-i18n="statsMax">Max</th>
+            <th data-i18n="statsBestGap">Pause max</th>
           </tr>
         </thead>
         <tbody id="stats-body"></tbody>
@@ -67,36 +67,45 @@
         <tbody id="history-body"></tbody>
       </table>
     </div>
-    <p class="empty-history hidden" id="empty-history">Pas encore d'historique.</p>
+    <p class="empty-history hidden" id="empty-history" data-i18n="emptyHistory">Pas encore d'historique.</p>
   </section>
 
   <section id="view-settings" class="view hidden">
     <div class="settings-card">
-      <h2 class="settings-title">Mes données</h2>
-      <p class="settings-hint">Télécharge une copie de toutes tes données au format JSON.</p>
-      <button class="settings-btn settings-btn-primary" id="export-btn">Télécharger mes données</button>
-      <p class="settings-hint">Restaure des données depuis un fichier exporté précédemment.</p>
-      <button class="settings-btn settings-btn-primary" id="import-btn">Importer mes données</button>
+      <h2 class="settings-title" data-i18n="settingsDataTitle">Mes données</h2>
+      <p class="settings-hint" data-i18n="settingsDataHint">Exporte une copie de toutes tes données au format JSON.</p>
+      <button class="settings-btn settings-btn-primary" id="export-btn" data-i18n="exportBtn">Exporter mes données</button>
+      <p class="settings-hint" data-i18n="settingsImportHint">Restaure des données depuis un fichier exporté précédemment.</p>
+      <button class="settings-btn settings-btn-primary" id="import-btn" data-i18n="importBtn">Importer mes données</button>
       <input type="file" accept="application/json,.json" id="import-file">
     </div>
 
     <div class="settings-card hidden" id="archive-card">
-      <h2 class="settings-title">Archives</h2>
-      <p class="settings-hint">Addictions retirées de l'accueil, données conservées.</p>
+      <h2 class="settings-title" data-i18n="archiveTitle">Archives</h2>
+      <p class="settings-hint" data-i18n="archiveHint">Addictions retirées de l'accueil, données conservées.</p>
       <div id="archive-list"></div>
     </div>
 
     <div class="settings-card">
-      <h2 class="settings-title">Réinitialisation</h2>
-      <p class="settings-hint">Efface définitivement l'historique et les compteurs du jour, puis recharge l'application.</p>
-      <button class="settings-btn settings-btn-danger" id="reset-btn">Réinitialiser toutes les données</button>
+      <h2 class="settings-title" data-i18n="resetTitle">Réinitialisation</h2>
+      <p class="settings-hint" data-i18n="resetHint">Efface définitivement l'historique et les compteurs du jour, puis recharge l'application.</p>
+      <button class="settings-btn settings-btn-danger" id="reset-btn" data-i18n="resetBtn">Réinitialiser toutes les données</button>
     </div>
 
     <div class="settings-card">
-      <h2 class="settings-title">À propos</h2>
+      <h2 class="settings-title" data-i18n="languageTitle">Langue</h2>
+      <p class="settings-hint" data-i18n="languageHint">Choisis la langue de l'interface.</p>
+      <div class="lang-switch">
+        <button type="button" class="lang-btn" data-lang="fr">Français</button>
+        <button type="button" class="lang-btn" data-lang="en">English</button>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h2 class="settings-title" data-i18n="aboutTitle">À propos</h2>
       <p class="about-name">CountAddict</p>
-      <p class="settings-hint">Un compteur minimaliste pour suivre tes habitudes, un tap à la fois.</p>
-      <p class="settings-hint">Toutes les données restent sur cet appareil — aucun compte, aucun cloud.</p>
+      <p class="settings-hint" data-i18n="aboutTagline">Un compteur minimaliste pour suivre tes habitudes, un tap à la fois.</p>
+      <p class="settings-hint" data-i18n="aboutPrivacy">Toutes les données restent sur cet appareil — aucun compte, aucun cloud.</p>
     </div>
   </section>
 </main>

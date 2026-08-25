@@ -29,10 +29,10 @@ Un compteur minimaliste zero-friction : un tap = un événement enregistré, san
 
 ## Capabilities and Constraints
 
-- Aucune addiction n'est active par défaut : au premier lancement, la page d'accueil est vide et seul le lien « + Ajouter une addiction » est visible. Huit addictions basiques (cigarette, café, thé, alcool, sucrerie, énergisant, vapotage, soda) sont proposées en catalogue (`CATALOG` dans `app.js`), réordonnables par glissé-déposé. Une croix discrète sur chaque bulle propose d'Archiver (retire le widget de l'accueil, données conservées) ; les addictions archivées se gèrent depuis Réglages → Archives, avec un choix Réafficher (remet le widget) ou Supprimer (efface définitivement les données) — pas de catégories personnalisées libres.
+- Aucune addiction n'est active par défaut : au premier lancement, la page d'accueil est vide et seul le lien « + Ajouter une addiction » est visible. Douze addictions basiques (cigarette, café, thé, alcool, sucrerie, énergisant, vapotage, soda, achat, voyage, grignotage, CBD) sont proposées en catalogue (`CATALOG` dans `app.js`), réordonnables par glissé-déposé. Une croix discrète sur chaque bulle ouvre un menu Archiver/Supprimer : Archiver n'apparaît que si la bulle a déjà été utilisée au moins une fois (retire le widget de l'accueil et de l'historique, données conservées, date d'archivage horodatée) ; Supprimer est toujours proposé et efface définitivement les données, avec une confirmation demandée uniquement s'il existe des données à perdre. Les addictions archivées se gèrent depuis Réglages → Archives, avec un choix Réafficher (remet le widget) ou Supprimer — pas de catégories personnalisées libres.
 - Persistance exclusivement locale via `localStorage` (clé `countaddict.history`) — pas de compte, pas de sync, pas de backend, pas de sauvegarde serveur.
 - Stack zero-build, zero dépendance : HTML/CSS/JS vanilla, aucun framework, aucun bundler — contrainte durable à préserver pendant la refonte visuelle.
-- Interface en français uniquement — pas de scaffolding i18n à ajouter.
+- Interface en français par défaut, avec un sélecteur de langue français/anglais dans Réglages (choix mémorisé en local). L'i18n reste un dictionnaire JS statique, cohérent avec la contrainte zero-build — pas de scaffolding lourd (pas de librairie i18n, pas de fichiers de traduction séparés).
 
 ## Brand Commitments
 
@@ -50,4 +50,4 @@ Aucun asset de contenu (pas de témoignages, pas de captures, pas de données de
 2. Toutes les données restent locales (localStorage uniquement) — pas de compte, pas de cloud, par choix durable et non par simple absence de fonctionnalité.
 3. Stack zero-build / zero dépendance — la refonte visuelle ne doit pas introduire d'outillage de build.
 4. Outil mono-utilisateur, usage personnel — ne pas ajouter de fonctionnalités multi-utilisateur, partage ou compte.
-5. Interface français uniquement.
+5. Interface français par défaut ; anglais disponible en option depuis Réglages (confirmé 2026-08-25) — toute traduction ajoutée doit rester cohérente avec les deux langues.

@@ -22,6 +22,14 @@
   --vaping-dark: #55628C;
   --soda: #A8524F;
   --soda-dark: #883F3C;
+  --shopping: #8B5FBF;
+  --shopping-dark: #6B4494;
+  --travel: #4A90D9;
+  --travel-dark: #3570AA;
+  --snack: #E0954A;
+  --snack-dark: #B8722F;
+  --cbd: #7A9A3E;
+  --cbd-dark: #5E7A2E;
   --border: #EFE2D6;
   --shadow: 0 8px 24px rgba(43, 33, 24, 0.08);
   --shadow-pressed: 0 4px 12px rgba(43, 33, 24, 0.06);
@@ -95,6 +103,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   margin: 1rem auto;
+  width: calc(100% - 2rem);
   max-width: 400px;
   background: var(--surface);
   border-radius: 999px;
@@ -157,44 +166,46 @@ main {
   display: none;
 }
 
+/* flexbox + wrap : les vignettes se centrent naturellement quand une ligne n'est pas complète */
 .counters {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 0.85rem;
+  margin-top: 1rem;
 }
 
-/* 1 ou 2 bulles actives : toujours centrées à leur taille naturelle, quel que soit l'écran */
-.counters[data-count="1"] {
-  grid-template-columns: minmax(150px, 240px);
+.counter-card {
+  flex: 0 1 calc(50% - 0.425rem);
 }
 
-.counters[data-count="2"] {
-  grid-template-columns: repeat(2, minmax(150px, 220px));
-}
-
-/* medium : à partir des phablettes/petites tablettes en largeur */
+/* medium : à partir des phablettes/petites tablettes en largeur — 3 par ligne max */
 @media (min-width: 480px) {
   main {
     max-width: 640px;
   }
 
-  .counters[data-count="3"] {
-    grid-template-columns: repeat(2, 1fr);
+  .counters {
     gap: 1.1rem;
+  }
+
+  .counter-card {
+    flex-basis: calc(33.333% - 0.734rem);
   }
 }
 
-/* large : tablettes en paysage, laptops, desktop — 3 colonnes seulement à partir d'ici */
+/* large : tablettes en paysage, laptops, desktop — reste à 3 par ligne max */
 @media (min-width: 900px) {
   main {
     max-width: 820px;
   }
 
-  .counters[data-count="3"] {
-    grid-template-columns: repeat(3, 1fr);
+  .counters {
     gap: 1.25rem;
+  }
+
+  .counter-card {
+    flex-basis: calc(33.333% - 0.834rem);
   }
 }
 
@@ -306,6 +317,26 @@ main {
   --tap-shadow: color-mix(in srgb, var(--soda) 55%, transparent);
 }
 
+.counter-shopping .tap-btn {
+  background: radial-gradient(circle at 30% 30%, var(--shopping), var(--shopping-dark));
+  --tap-shadow: color-mix(in srgb, var(--shopping) 55%, transparent);
+}
+
+.counter-travel .tap-btn {
+  background: radial-gradient(circle at 30% 30%, var(--travel), var(--travel-dark));
+  --tap-shadow: color-mix(in srgb, var(--travel) 55%, transparent);
+}
+
+.counter-snack .tap-btn {
+  background: radial-gradient(circle at 30% 30%, var(--snack), var(--snack-dark));
+  --tap-shadow: color-mix(in srgb, var(--snack) 55%, transparent);
+}
+
+.counter-cbd .tap-btn {
+  background: radial-gradient(circle at 30% 30%, var(--cbd), var(--cbd-dark));
+  --tap-shadow: color-mix(in srgb, var(--cbd) 55%, transparent);
+}
+
 .tap-btn .emoji {
   font-size: 1.85rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -329,8 +360,12 @@ main {
   line-height: 1;
   cursor: pointer;
   position: absolute;
-  left: 0.85rem;
-  top: 0.85rem;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .minus-btn:disabled {
@@ -348,10 +383,14 @@ main {
   line-height: 1;
   cursor: pointer;
   position: absolute;
-  right: 0.7rem;
-  top: 0.7rem;
+  right: 14px;
+  top: 14px;
   opacity: 0.5;
   transition: opacity 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .remove-btn:hover,
@@ -365,12 +404,13 @@ main {
   align-items: flex-end;
   gap: 0.3rem;
   position: absolute;
-  right: 0.6rem;
-  top: 0.6rem;
+  right: 14px;
+  top: 14px;
 }
 
 .cancel-menu-btn,
-.archive-confirm {
+.archive-btn,
+.delete-btn {
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.3rem 0.6rem;
@@ -379,10 +419,20 @@ main {
   white-space: nowrap;
 }
 
-.archive-confirm {
+.archive-btn {
   border: none;
   background: var(--text);
   color: var(--bg);
+}
+
+.archive-btn.hidden {
+  display: none;
+}
+
+.delete-btn {
+  border: 1px solid var(--cigarette-dark);
+  background: transparent;
+  color: var(--cigarette-dark);
 }
 
 .cancel-menu-btn {
@@ -550,6 +600,19 @@ main {
   border-bottom: none;
 }
 
+/* écrans étroits : la colonne "Pause max" est la moins essentielle, on la retire pour éviter le scroll horizontal */
+@media (max-width: 479px) {
+  #stats-table th:last-child,
+  #stats-table td:last-child {
+    display: none;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.65rem 0.6rem;
+  }
+}
+
 .empty-history {
   text-align: center;
   color: var(--text-muted);
@@ -587,6 +650,18 @@ main {
 
 .archive-row:last-child {
   border-bottom: none;
+}
+
+.archive-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.archive-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
 }
 
 .archive-actions {
@@ -650,6 +725,30 @@ main {
 }
 
 .month-chip.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.lang-switch {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lang-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.lang-btn.active {
   background: var(--text);
   border-color: var(--text);
   color: var(--bg);

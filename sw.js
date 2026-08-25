@@ -1,4 +1,4 @@
-const CACHE_NAME = "countaddict-v3";
+const CACHE_NAME = "countaddict-cache";
 const ASSETS = [
   "./",
   "index.html",
