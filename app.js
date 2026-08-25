@@ -455,6 +455,45 @@ function buildSparkline(values) {
   return `<svg class="sparkline" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${points}" /></svg>`;
 }
 
+function setupTrendInteraction(chartEl, labelEl, dates, values) {
+  if (values.length < 2) return;
+  const max = Math.max(...values, 1);
+  const defaultLabel = labelEl.textContent;
+
+  const dot = document.createElement("div");
+  dot.className = "trend-dot";
+  chartEl.appendChild(dot);
+
+  function indexFromEvent(e) {
+    const rect = chartEl.getBoundingClientRect();
+    const ratio = rect.width ? Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)) : 0;
+    return Math.round(ratio * (values.length - 1));
+  }
+
+  function show(index) {
+    dot.style.left = `${(index / (values.length - 1)) * 100}%`;
+    dot.style.top = `${100 - (values[index] / max) * 100}%`;
+    dot.classList.add("visible");
+    const dateLabel = new Date(`${dates[index]}T00:00:00`).toLocaleDateString(LOCALES[getLang()], {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    labelEl.textContent = `${dateLabel} · ${values[index]}`;
+  }
+
+  function hide() {
+    dot.classList.remove("visible");
+    labelEl.textContent = defaultLabel;
+  }
+
+  chartEl.addEventListener("pointermove", (e) => show(indexFromEvent(e)));
+  chartEl.addEventListener("pointerdown", (e) => show(indexFromEvent(e)));
+  chartEl.addEventListener("pointerleave", hide);
+  chartEl.addEventListener("pointerup", hide);
+  chartEl.addEventListener("pointercancel", hide);
+}
+
 function renderHistory() {
   const history = getHistory();
   renderRangePicker(history);
@@ -483,7 +522,8 @@ function renderHistory() {
     const stat = totals.byType[type] || { total: 0, max: 0 };
     const avg = totals.days ? stat.total / totals.days : 0;
     const longestGap = getLongestGap(type, lastTaps, gaps);
-    const trend = buildSparkline(trendDates.map((date) => history[date][type] || 0));
+    const trendValues = trendDates.map((date) => history[date][type] || 0);
+    const trend = buildSparkline(trendValues);
     const card = document.createElement("div");
     card.className = `history-card history-card-${type}`;
     card.innerHTML = `
@@ -499,10 +539,11 @@ function renderHistory() {
       </div>
       <div class="history-trend">
         <span class="history-trend-label">${t("statsTrend")}</span>
-        ${trend}
+        <div class="trend-chart">${trend}</div>
       </div>
     `;
     fragment.appendChild(card);
+    setupTrendInteraction(card.querySelector(".trend-chart"), card.querySelector(".history-trend-label"), trendDates, trendValues);
   }
   cards.innerHTML = "";
   cards.appendChild(fragment);

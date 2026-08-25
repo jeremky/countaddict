@@ -662,6 +662,24 @@ body.dragging-active {
   margin-bottom: 0.5rem;
 }
 
+.history-card-cigarette { --trend-color: var(--cigarette-dark); }
+.history-card-coffee { --trend-color: var(--coffee-dark); }
+.history-card-tea { --trend-color: var(--tea-dark); }
+.history-card-alcohol { --trend-color: var(--alcohol-dark); }
+.history-card-sugar { --trend-color: var(--sugar-dark); }
+.history-card-energy { --trend-color: var(--energy-dark); }
+.history-card-vaping { --trend-color: var(--vaping-dark); }
+.history-card-soda { --trend-color: var(--soda-dark); }
+.history-card-shopping { --trend-color: var(--shopping-dark); }
+.history-card-travel { --trend-color: var(--travel-dark); }
+.history-card-snack { --trend-color: var(--snack-dark); }
+.history-card-cbd { --trend-color: var(--cbd-dark); }
+
+.trend-chart {
+  position: relative;
+  touch-action: pan-y;
+}
+
 .sparkline {
   display: block;
   width: 100%;
@@ -671,25 +689,29 @@ body.dragging-active {
 
 .sparkline polyline {
   fill: none;
-  stroke: var(--text-muted);
+  stroke: var(--trend-color, var(--text-muted));
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
 
-.history-card-cigarette .sparkline polyline { stroke: var(--cigarette-dark); }
-.history-card-coffee .sparkline polyline { stroke: var(--coffee-dark); }
-.history-card-tea .sparkline polyline { stroke: var(--tea-dark); }
-.history-card-alcohol .sparkline polyline { stroke: var(--alcohol-dark); }
-.history-card-sugar .sparkline polyline { stroke: var(--sugar-dark); }
-.history-card-energy .sparkline polyline { stroke: var(--energy-dark); }
-.history-card-vaping .sparkline polyline { stroke: var(--vaping-dark); }
-.history-card-soda .sparkline polyline { stroke: var(--soda-dark); }
-.history-card-shopping .sparkline polyline { stroke: var(--shopping-dark); }
-.history-card-travel .sparkline polyline { stroke: var(--travel-dark); }
-.history-card-snack .sparkline polyline { stroke: var(--snack-dark); }
-.history-card-cbd .sparkline polyline { stroke: var(--cbd-dark); }
+.trend-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--trend-color, var(--text));
+  border: 2px solid var(--surface);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.trend-dot.visible {
+  opacity: 1;
+}
 
 .empty-history {
   text-align: center;
