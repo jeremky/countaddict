@@ -77,7 +77,6 @@ const TRANSLATIONS = {
     confirmReset: "Réinitialiser toutes les données ? Cette action est irréversible.",
     justNow: "à l'instant",
     timeAgo: (d) => `il y a ${d}`,
-    lessThanMinute: "moins d'une minute",
     minute: "minute",
     minutes: "minutes",
     hour: "heure",
@@ -151,7 +150,6 @@ const TRANSLATIONS = {
     confirmReset: "Reset all data? This action is irreversible.",
     justNow: "just now",
     timeAgo: (d) => `${d} ago`,
-    lessThanMinute: "less than a minute",
     minute: "minute",
     minutes: "minutes",
     hour: "hour",
@@ -351,16 +349,11 @@ function pluralize(count, singular, plural) {
 }
 
 function formatDuration(ms) {
-  const minutes = Math.floor(ms / 60000);
-  if (minutes < 1) return t("lessThanMinute");
+  const minutes = Math.max(1, Math.round(ms / 60000));
   if (minutes < 60) return `${minutes} ${pluralize(minutes, t("minute"), t("minutes"))}`;
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  if (hours < 24) {
-    const hoursPart = `${hours} ${pluralize(hours, t("hour"), t("hours"))}`;
-    return remainingMinutes === 0 ? hoursPart : `${hoursPart} ${remainingMinutes} ${pluralize(remainingMinutes, t("minute"), t("minutes"))}`;
-  }
-  const days = Math.floor(hours / 24);
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} ${pluralize(hours, t("hour"), t("hours"))}`;
+  const days = Math.round(hours / 24);
   return `${days} ${pluralize(days, t("day"), t("days"))}`;
 }
 
