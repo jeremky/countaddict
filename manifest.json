@@ -1,7 +1,7 @@
 {
   "name": "CountAddict",
   "short_name": "CountAddict",
-  "description": "Compte tes cigarettes et cafés au fil de la journée.",
+  "description": "Un compteur minimaliste pour suivre tes habitudes, un tap à la fois.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
